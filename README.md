@@ -80,14 +80,21 @@ This will install all required packages including:
 
 ```bash
 # .env
-PORT=3000
+PORT=2122
 
 # MongoDB Atlas Configuration - REQUIRED
-ICEBERGDB=mongodb+srv://<your-username>:<your-password>@cluster.xxxxx.mongodb.net/Iceberg
+# This project uses MongoDB Atlas cluster 'iceberg' at: iceberg.ciyct1a.mongodb.net
+ICEBERGDB="mongodb+srv://berkozerdogan_db_user:021320@iceberg.ciyct1a.mongodb.net/?appName=Iceberg"
 
 # Node Environment
 NODE_ENV=development
 ```
+
+**Connection Details**:
+- **Cluster**: iceberg (MongoDB Atlas)
+- **Database**: Iceberg
+- **User**: berkozerdogan_db_user
+- **Connection String**: `mongodb+srv://berkozerdogan_db_user:021320@iceberg.ciyct1a.mongodb.net/?appName=Iceberg`
 
 **Important Security Notes**:
 - Replace `<your-username>` and `<your-password>` with your MongoDB Atlas credentials
@@ -187,7 +194,8 @@ npm test -- -t "createTransaction"
 
 ### Base URL
 - **Development**: `http://localhost:3000`
-- **Production**: Deploy to Heroku, AWS, or Azure (see Deployment section)
+- **Production (Live)**: `https://berkozerdogan-task.vercel.app`
+- **Deployment Platform**: Vercel (serverless Node.js)
 
 ### Health Check Endpoint
 
