@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionModule } from './transaction/transaction.module';
-import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { HealthModule } from './health/health.module';
       },
     }),
     TransactionModule,
-    HealthModule,
   ],
   controllers: [],
   providers: [],
