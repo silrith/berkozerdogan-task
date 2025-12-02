@@ -12,30 +12,34 @@ export enum TransactionStage {
 
 @Schema({ timestamps: true })
 export class Transaction {
-  @Prop({ required: true })
+  @Prop({ required: true, type: Number, min: 0 })
   totalServiceFee: number;
 
-  @Prop({ required: true })
-  listingAgent?: string;
+  @Prop({ required: true, type: String })
+  listingAgent: string;
 
-  @Prop({ required: true })
-  sellingAgent?: string;
+  @Prop({ required: true, type: String })
+  sellingAgent: string;
 
   @Prop({ enum: TransactionStage, default: TransactionStage.AGREEMENT })
   stage: TransactionStage;
 
-  @Prop({ type: Object })
+  @Prop({
+    type: {
+      agency: { type: Number, default: 0 },
+      listingAgent: { type: Number, default: 0 },
+      sellingAgent: { type: Number, default: 0 },
+    },
+    default: { agency: 0, listingAgent: 0, sellingAgent: 0 },
+  })
   financialBreakdown?: {
-    agency?: number;
-    listingAgent?: number;
-    sellingAgent?: number;
+    agency: number;
+    listingAgent: number;
+    sellingAgent: number;
   };
 
-  @Prop()
+  @Prop({ type: String, default: '' })
   commissionDetail?: string;
-
-  @Prop()
-  earnest_money?: number;
 
   @Prop({
     type: [
@@ -49,6 +53,7 @@ export class Transaction {
         updatedAt: { type: Date, default: Date.now },
       },
     ],
+    default: [],
   })
   stageHistory?: {
     stage: TransactionStage;

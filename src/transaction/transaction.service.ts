@@ -22,7 +22,9 @@ export class TransactionService {
   async createTransaction(dto: CreateTransactionDto): Promise<Transaction> {
     try {
       const createdTransaction = new this.transactionModel({
-        ...dto,
+        totalServiceFee: dto.totalServiceFee,
+        listingAgent: dto.listingAgent,
+        sellingAgent: dto.sellingAgent,
         stage: TransactionStage.AGREEMENT,
         financialBreakdown: {
           agency: 0,
@@ -30,7 +32,17 @@ export class TransactionService {
           sellingAgent: 0,
         },
         commissionDetail: '',
-        earnest_money: 0,
+        stageHistory: [
+          {
+            stage: TransactionStage.AGREEMENT,
+            changes: {
+              totalServiceFee: dto.totalServiceFee,
+              listingAgent: dto.listingAgent,
+              sellingAgent: dto.sellingAgent,
+            },
+            updatedAt: new Date(),
+          },
+        ],
       });
 
       return createdTransaction.save();
@@ -52,6 +64,7 @@ export class TransactionService {
 
     if (listingAgent === sellingAgent) {
       listingShare = total * 0.5;
+      sellingShare = 0;
     } else {
       listingShare = total * 0.25;
       sellingShare = total * 0.25;
@@ -59,8 +72,8 @@ export class TransactionService {
 
     return {
       agency: agencyShare,
-      listingAgent: listingShare || undefined,
-      sellingAgent: sellingShare || undefined,
+      listingAgent: listingShare,
+      sellingAgent: sellingShare,
     };
   }
 
@@ -86,22 +99,22 @@ export class TransactionService {
 
     const changes: Record<string, any> = {};
 
-    if ((dto.stage as TransactionStage) === TransactionStage.EARNEST_MONEY) {
-      if (!dto.earnest_money) {
+    if (dto.stage === TransactionStage.EARNEST_MONEY) {
+      if (dto.earnest_money === undefined || dto.earnest_money === null) {
         throw new Error('Earnest money must be provided for this stage.');
       }
-      if (transaction.earnest_money !== dto.earnest_money) {
-        changes.earnest_money = dto.earnest_money;
-        transaction.earnest_money = dto.earnest_money;
+      if (dto.earnest_money < 0) {
+        throw new Error('Earnest money must be a positive number.');
       }
+      changes.earnest_money = dto.earnest_money;
     }
 
-    if (transaction.stage !== (dto.stage as TransactionStage)) {
+    if (transaction.stage !== dto.stage) {
       changes.stage = { from: transaction.stage, to: dto.stage };
-      transaction.stage = dto.stage as TransactionStage;
+      transaction.stage = dto.stage;
     }
 
-    if ((dto.stage as TransactionStage) === TransactionStage.COMPLETED) {
+    if (dto.stage === TransactionStage.COMPLETED) {
       const financialBreakdown = this.calculateCommission(transaction);
       if (
         JSON.stringify(transaction.financialBreakdown) !==
@@ -113,8 +126,8 @@ export class TransactionService {
 
       const commissionDetail =
         transaction.listingAgent === transaction.sellingAgent
-          ? 'Since the listing and selling companies are the same, all commission was transferred to the listing company.'
-          : 'Since the listing and selling companies were different, half of the total amount was distributed to the companies in two shares and transferred to their accounts.';
+          ? `Since the listing and selling agents are the same (${transaction.listingAgent}), the agent receives 100% of the agent portion (50%): ${financialBreakdown.listingAgent} units.`
+          : `Since the listing and selling agents are different, they share equally. Listing agent (${transaction.listingAgent}): ${financialBreakdown.listingAgent} units. Selling agent (${transaction.sellingAgent}): ${financialBreakdown.sellingAgent} units.`;
 
       if (transaction.commissionDetail !== commissionDetail) {
         changes.commissionDetail = commissionDetail;
@@ -124,7 +137,7 @@ export class TransactionService {
 
     transaction.stageHistory = transaction.stageHistory || [];
     transaction.stageHistory.push({
-      stage: dto.stage as TransactionStage,
+      stage: dto.stage,
       changes,
       updatedAt: new Date(),
     });
@@ -132,7 +145,10 @@ export class TransactionService {
     return transaction.save();
   }
 
-  private validateStageTransition(current: TransactionStage, next: string) {
+  private validateStageTransition(
+    current: TransactionStage,
+    next: TransactionStage,
+  ) {
     const validTransitions: Record<TransactionStage, TransactionStage[]> = {
       [TransactionStage.AGREEMENT]: [TransactionStage.EARNEST_MONEY],
       [TransactionStage.EARNEST_MONEY]: [TransactionStage.TITLE_DEED],
@@ -140,7 +156,7 @@ export class TransactionService {
       [TransactionStage.COMPLETED]: [],
     };
 
-    if (!validTransitions[current].includes(next as TransactionStage)) {
+    if (!validTransitions[current].includes(next)) {
       throw new Error(
         `Invalid stage transition: You cannot jump from "${current}" to "${next}". Each stage must be completed step-by-step.`,
       );

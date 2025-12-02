@@ -1,98 +1,561 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Transaction Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS-based RESTful API for managing real estate transactions with MongoDB. The application handles transaction lifecycle management, financial breakdown calculations, and stage transitions with comprehensive type-safe testing.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Configuration](#environment-configuration)
+- [Running the Project](#running-the-project)
+- [Running Tests](#running-tests)
+- [API Endpoints](#api-endpoints)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- **Transaction Management**: Create, retrieve, and manage real estate transactions
+- **Stage Lifecycle**: Track transactions through multiple stages (Agreement → Earnest Money → Title Deed → Completed)
+- **Financial Calculations**: Automatic commission breakdown calculation based on agents
+- **Stage History**: Track all changes and stage transitions with timestamps
+- **Type-Safe Testing**: Comprehensive unit and integration tests with full TypeScript support
+- **MongoDB Integration**: Persistent data storage with Mongoose ODM
+- **Input Validation**: Class-validator for robust DTO validation
 
-```bash
-$ npm install
-```
+## Prerequisites
 
-## Compile and run the project
+- **Node.js**: v18 or higher
+- **npm**: v8 or higher
+- **MongoDB Atlas Account**: For cloud database hosting
+- **Git**: For version control
 
-```bash
-# development
-$ npm run start
+## Installation
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### 1. Clone the Repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/silrith/berkozerdogan-task.git
+cd berkozerdogan-task
 ```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+This will install all required packages including:
+- `@nestjs/*` - NestJS framework and modules
+- `mongoose` - MongoDB ODM
+- `class-validator` - DTO validation
+- Development dependencies: Jest, TypeScript, ESLint, Prettier
+
+## Environment Configuration
+
+### MongoDB Atlas Setup
+
+1. **Create MongoDB Atlas Account** (if you don't have one):
+   - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+   - Sign up for a free account
+   - Create a new project
+
+2. **Create a Cluster**:
+   - Click "Create a Deployment"
+   - Choose "M0 Free" tier (free for development)
+   - Select your preferred region
+   - Wait for cluster creation (5-10 minutes)
+
+3. **Get Connection String**:
+   - Click "Connect" on your cluster
+   - Choose "Drivers" → "Node.js"
+   - Copy the connection string (example format):
+     ```
+     mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority&appName=<appName>
+     ```
+
+4. **Configure Environment Variables**:
+   - Create a `.env` file in the project root (reference `.env.example`):
+
+```bash
+# .env
+PORT=3000
+
+# MongoDB Atlas Configuration - REQUIRED
+ICEBERGDB=mongodb+srv://<your-username>:<your-password>@cluster.xxxxx.mongodb.net/Iceberg
+
+# Node Environment
+NODE_ENV=development
+```
+
+**Important Security Notes**:
+- Replace `<your-username>` and `<your-password>` with your MongoDB Atlas credentials
+- Never commit `.env` file to version control (it's in `.gitignore`)
+- Use strong passwords for MongoDB Atlas
+- Whitelist your IP address in MongoDB Atlas (Security → Network Access)
+
+### Verify Connection
+
+Once `.env` is set up, the application will automatically connect on startup. You should see:
+```
+MongoDB connection successful
+[NestFactory] Starting Nest application...
+Listening on port 3000
+```
+
+## Running the Project
+
+### Development Mode (with auto-reload)
+
+```bash
+npm run start:dev
+```
+
+The server will start on `http://localhost:3000` and restart automatically when files change.
+
+### Production Mode
+
+```bash
+# Build the project
+npm run build
+
+# Run production build
+npm run start:prod
+```
+
+### Debug Mode
+
+```bash
+npm run start:debug
+```
+
+This starts the debugger on port 9229. Connect with your IDE's debugger.
+
+## Running Tests
+
+### Run All Tests
+
+```bash
+npm test
+```
+
+Runs all unit tests (both `src/**/*.spec.ts` and `test/**/*.spec.ts`):
+- `src/transaction/transaction.service.spec.ts` - Service unit tests (11 tests)
+- `src/transaction/transaction.controller.spec.ts` - Controller unit tests (8 tests)
+
+### Watch Mode (re-run on file changes)
+
+```bash
+npm run test:watch
+```
+
+### Test Coverage Report
+
+```bash
+npm run test:cov
+```
+
+Generates a coverage report in the `coverage/` directory showing:
+- Statement coverage
+- Branch coverage
+- Function coverage
+- Line coverage
+
+### E2E Tests
+
+```bash
+npm run test:e2e
+```
+
+Runs end-to-end tests (configured in `test/jest-e2e.json`).
+
+### Run Specific Test File
+
+```bash
+# Run controller tests only
+npx jest --runTestsByPath ./src/transaction/transaction.controller.spec.ts
+
+# Run service tests only
+npx jest --runTestsByPath ./src/transaction/transaction.service.spec.ts
+
+# Run tests matching a pattern
+npm test -- -t "createTransaction"
+```
+
+## API Endpoints
+
+### Base URL
+- **Development**: `http://localhost:3000`
+- **Production**: Deploy to Heroku, AWS, or Azure (see Deployment section)
+
+### Health Check Endpoint
+
+#### Health Status
+```http
+GET /health
+
+Response: 200 OK
+{
+  "status": "ok",
+  "message": "Transaction Management API is running",
+  "timestamp": "2024-12-02T10:30:00.000Z"
+}
+```
+
+### Transaction Endpoints (RESTful)
+
+#### Create Transaction
+```http
+POST /transactions
+Content-Type: application/json
+
+{
+  "totalServiceFee": 1000,
+  "listingAgent": "Alice",
+  "sellingAgent": "Bob"
+}
+
+Response: 201 Created
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "totalServiceFee": 1000,
+  "listingAgent": "Alice",
+  "sellingAgent": "Bob",
+  "stage": "agreement",
+  "financialBreakdown": {
+    "agency": 500,
+    "listingAgent": 250,
+    "sellingAgent": 250
+  },
+  "commissionDetail": "",
+  "stageHistory": [
+    {
+      "stage": "agreement",
+      "changes": {
+        "totalServiceFee": 1000,
+        "listingAgent": "Alice",
+        "sellingAgent": "Bob"
+      },
+      "updatedAt": "2024-12-02T10:30:00.000Z"
+    }
+  ]
+}
+```
+
+#### Get All Transactions
+```http
+GET /transactions
+
+Response: 200 OK
+[
+  { /* transaction object */ },
+  { /* transaction object */ }
+]
+```
+
+#### Get Single Transaction
+```http
+GET /transactions/:id
+
+Response: 200 OK
+{ /* transaction object */ }
+
+Error Response: 404 Not Found
+{
+  "statusCode": 404,
+  "message": "Transaction with id <id> not found"
+}
+```
+
+#### Update Transaction Stage
+```http
+PATCH /transactions/:id
+Content-Type: application/json
+
+{
+  "stage": "earnest_money",
+  "earnest_money": 300
+}
+
+Response: 200 OK
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "totalServiceFee": 1000,
+  "stage": "earnest_money",
+  "financialBreakdown": { ... },
+  "stageHistory": [
+    {
+      "stage": "earnest_money",
+      "changes": { "earnest_money": 300 },
+      "updatedAt": "2024-12-02T10:30:00Z"
+    }
+  ]
+}
+
+Error Response: 400 Bad Request
+{
+  "statusCode": 400,
+  "message": "Invalid stage transition: You cannot jump from 'agreement' to 'completed'..."
+}
+```
+
+### Transaction Stages
+
+1. **agreement** - Initial stage
+2. **earnest_money** - Earnest money deposited
+3. **title_deed** - Title deed prepared
+4. **completed** - Transaction completed
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Prerequisites for Deployment
+- MongoDB Atlas account with a running cluster
+- Deployment platform account (Render, Railway, or Fly.io)
+- Git repository pushed to GitHub
+- `.env` variables configured for your environment
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Option 1: Deploy to Render (Recommended - Free Tier Available)
+
+**Live API URL** (when deployed): `https://berkozerdogan-task.onrender.com`
+
+1. **Push your code to GitHub**:
+   ```bash
+   git remote add origin https://github.com/yourusername/berkozerdogan-task.git
+   git push -u origin master
+   ```
+
+2. **Create Render Account**:
+   - Go to [Render](https://render.com)
+   - Sign up with GitHub
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+
+3. **Configure Render Service**:
+   - **Name**: `berkozerdogan-task`
+   - **Branch**: `master`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm run start:prod`
+   - **Environment**: Node
+   - **Instance Type**: Free
+
+4. **Set Environment Variables** in Render Dashboard:
+   ```
+   ICEBERGDB=mongodb+srv://<username>:<password>@cluster.xxxxx.mongodb.net/Iceberg
+   PORT=3000
+   NODE_ENV=production
+   ```
+
+5. **Deploy**:
+   - Click "Create Web Service"
+   - Wait for deployment to complete (~2-3 minutes)
+   - Your API will be available at the provided URL
+
+6. **Verify Deployment**:
+   ```bash
+   curl https://your-render-url.onrender.com/health
+   ```
+
+### Option 2: Deploy to Railway
+
+1. **Create Railway Account**:
+   - Go to [Railway](https://railway.app)
+   - Sign in with GitHub
+
+2. **Create New Project**:
+   - Click "Create Project"
+   - Select "GitHub Repo"
+   - Choose `berkozerdogan-task` repository
+
+3. **Add MongoDB Atlas**:
+   - In Railway, click "Add Service" → "MongoDB"
+   - Configure plugin with MongoDB Atlas credentials
+
+4. **Configure Environment Variables**:
+   - `ICEBERGDB`: Your MongoDB Atlas URI
+   - `NODE_ENV`: production
+   - `PORT`: 3000
+
+5. **Deploy**:
+   - Railway automatically deploys on GitHub push
+   - View logs and URL in Railway dashboard
+
+### Option 3: Deploy to Fly.io
+
+1. **Install Fly CLI**:
+   ```bash
+   npm install -g @fly/cli
+   fly auth login
+   ```
+
+2. **Create Fly App**:
+   ```bash
+   fly launch
+   ```
+   - Choose app name: `berkozerdogan-task`
+   - Choose region closest to you
+
+3. **Set Secrets**:
+   ```bash
+   fly secrets set ICEBERGDB=mongodb+srv://...
+   fly secrets set NODE_ENV=production
+   ```
+
+4. **Deploy**:
+   ```bash
+   fly deploy
+   ```
+
+5. **View Application**:
+   ```bash
+   fly open
+   ```
+
+### Health Check After Deployment
+
+Once deployed, verify the API is running:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Health endpoint
+curl https://your-deployed-url.com/health
+
+# Expected response:
+# {
+#   "status": "ok",
+#   "message": "Transaction Management API is running",
+#   "timestamp": "2024-12-02T10:30:00.000Z"
+# }
+
+# Test create transaction
+curl -X POST https://your-deployed-url.com/transactions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "totalServiceFee": 1000,
+    "listingAgent": "Alice",
+    "sellingAgent": "Bob"
+  }'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Deployment Troubleshooting
 
-## Resources
+- **Build fails**: Check `package.json` scripts and ensure `npm run build` works locally
+- **MongoDB connection fails**: Verify `ICEBERGDB` URI is correct and IP is whitelisted in Atlas
+- **Port issues**: Platform automatically assigns PORT, ensure your code uses `process.env.PORT`
+- **Out of memory**: Upgrade to paid tier or optimize database queries
 
-Check out a few resources that may come in handy when working with NestJS:
+## Project Structure
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+berkozerdogan-task/
+├── src/
+│   ├── app.controller.ts           # Main application controller
+│   ├── app.module.ts               # Root application module
+│   ├── app.service.ts              # Main application service
+│   ├── main.ts                     # Application entry point
+│   ├── health/
+│   │   ├── health.controller.ts    # Health check endpoint
+│   │   └── health.module.ts        # Health module
+│   └── transaction/
+│       ├── dto/
+│       │   ├── create-transaction.dto.ts    # DTO for creating transactions
+│       │   ├── update-transaction.dto.ts    # DTO for updating transactions
+│       │   └── index.ts                     # DTO exports
+│       ├── schemas/
+│       │   └── transaction.schema.ts        # Mongoose schema definition
+│       ├── transaction.controller.ts        # Transaction controller (RESTful)
+│       ├── transaction.service.ts           # Transaction business logic
+│       └── transaction.module.ts            # Transaction module
+├── test/
+│   ├── transaction.service.spec.ts # Service unit tests
+│   ├── transaction.controller.spec.ts # Controller unit tests
+│   ├── app.e2e-spec.ts             # E2E tests
+│   └── jest-e2e.json               # E2E Jest config
+├── .env.example                    # Environment variables template
+├── .gitignore                      # Git ignore rules
+├── eslint.config.mjs               # ESLint configuration
+├── nest-cli.json                   # NestJS CLI configuration
+├── package.json                    # Project dependencies
+├── tsconfig.json                   # TypeScript configuration
+├── tsconfig.build.json             # TypeScript build configuration
+├── DESIGN.md                       # Architecture and design decisions
+├── README.md                       # This file
+└── README_OLD.md                   # Previous documentation
+```
 
-## Support
+## Development Commands
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Code formatting
+npm run format
 
-## Stay in touch
+# ESLint with auto-fix
+npm run lint
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Build project
+npm run build
+
+# Start development server
+npm run start:dev
+
+# Run tests with watch
+npm run test:watch
+
+# Run tests with coverage
+npm run test:cov
+
+# Run e2e tests
+npm run test:e2e
+```
+
+## Common Issues and Solutions
+
+### MongoDB Connection Error
+
+**Error**: `MongooseError: Cannot connect to MongoDB`
+
+**Solution**:
+- Check MongoDB Atlas connection string in `.env`
+- Verify credentials are correct
+- Whitelist your IP in MongoDB Atlas (Security → Network Access)
+- Ensure MongoDB Atlas cluster is running
+
+### Port Already in Use
+
+**Error**: `Error: listen EADDRINUSE :::3000`
+
+**Solution**:
+```bash
+# Kill process on port 3000
+# On Windows:
+netstat -ano | findstr :3000
+taskkill /PID <PID> /F
+
+# On macOS/Linux:
+lsof -i :3000
+kill -9 <PID>
+```
+
+### Tests Fail with "Cannot find module"
+
+**Error**: `Cannot find module '../src/transaction/...'`
+
+**Solution**:
+```bash
+# Clear Jest cache
+npm test -- --clearCache
+
+# Reinstall node_modules
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Contributing
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Commit changes: `git commit -am 'Add your feature'`
+3. Push to branch: `git push origin feature/your-feature`
+4. Submit a pull request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the UNLICENSED license.

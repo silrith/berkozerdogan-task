@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "44a68036-3e7f-4774-bbe1-1631a469cf67",
+		"name": "Iceberg",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21199382"
+	},
+	"item": [
+		{
+			"name": "CreateTransactionFull",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"totalServiceFee\": 1200,\r\n    \"listingAgent\": \"Berk\",\r\n    \"sellingAgent\": \"Alice\",\r\n    \"earnest_money\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2122/transactions",
+					"host": [
+						"localhost"
+					],
+					"port": "2122",
+					"path": [
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTransactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2122/transactions",
+					"host": [
+						"localhost"
+					],
+					"port": "2122",
+					"path": [
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2122/transactions/692f117828fde9a3b99bf481",
+					"host": [
+						"localhost"
+					],
+					"port": "2122",
+					"path": [
+						"transactions",
+						"692f117828fde9a3b99bf481"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTransaction",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"earnest_money\": 400,\r\n    \"stage\": \"earnest_money\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:2122/transactions/692f117828fde9a3b99bf481",
+					"host": [
+						"localhost"
+					],
+					"port": "2122",
+					"path": [
+						"transactions",
+						"692f117828fde9a3b99bf481"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
