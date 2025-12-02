@@ -1,26 +1,18 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Patch,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Patch } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { Transaction, TransactionStage } from './schemas/transaction.schema';
+import { Transaction } from './schemas/transaction.schema';
+import { CreateTransactionDto, UpdateTransactionDto } from './dto/index';
 
-@Controller('transactions')
+@Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Post()
+  @Post('create')
   async create(@Body() dto: CreateTransactionDto): Promise<Transaction> {
     return this.transactionService.createTransaction(dto);
   }
 
-  @Get()
+  @Get('getAll')
   async findAll(): Promise<Transaction[]> {
     return this.transactionService.findAll();
   }
@@ -30,11 +22,8 @@ export class TransactionController {
     return this.transactionService.findOne(id);
   }
 
-  @Patch(':id/stage')
-  async updateStage(
-    @Param('id') id: string,
-    @Query('stage') stage: TransactionStage,
-  ): Promise<Transaction> {
-    return this.transactionService.updateStage(id, stage);
+  @Patch('update')
+  async updateStage(@Body() dto: UpdateTransactionDto): Promise<Transaction> {
+    return this.transactionService.updateStage(dto);
   }
 }

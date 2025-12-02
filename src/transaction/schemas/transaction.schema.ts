@@ -15,10 +15,10 @@ export class Transaction {
   @Prop({ required: true })
   totalServiceFee: number;
 
-  @Prop()
+  @Prop({ required: true })
   listingAgent?: string;
 
-  @Prop()
+  @Prop({ required: true })
   sellingAgent?: string;
 
   @Prop({ enum: TransactionStage, default: TransactionStage.AGREEMENT })
@@ -26,10 +26,35 @@ export class Transaction {
 
   @Prop({ type: Object })
   financialBreakdown?: {
-    agency: number;
+    agency?: number;
     listingAgent?: number;
     sellingAgent?: number;
   };
+
+  @Prop()
+  commissionDetail?: string;
+
+  @Prop()
+  earnest_money?: number;
+
+  @Prop({
+    type: [
+      {
+        stage: {
+          type: String,
+          enum: Object.values(TransactionStage),
+          required: true,
+        },
+        changes: { type: Object, default: {} },
+        updatedAt: { type: Date, default: Date.now },
+      },
+    ],
+  })
+  stageHistory?: {
+    stage: TransactionStage;
+    changes: Record<string, any>;
+    updatedAt: Date;
+  }[];
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

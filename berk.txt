@@ -1,0 +1,4 @@
+aggrement = Anlaşma
+earnest_money = Kapora
+title_deed = Tapu
+completed = Tamamlandı

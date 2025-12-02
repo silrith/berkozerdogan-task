@@ -1,18 +1,15 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { TransactionStage } from '../schemas/transaction.schema';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateTransactionDto {
   @IsNumber()
   totalServiceFee: number;
 
-  @IsOptional()
   @IsString()
-  listingAgent?: string;
+  listingAgent: string;
 
-  @IsOptional()
   @IsString()
-  sellingAgent?: string;
+  sellingAgent: string;
 
-  @IsOptional()
-  stage?: TransactionStage;
+  @IsNumber()
+  earnest_money?: number;
 }
