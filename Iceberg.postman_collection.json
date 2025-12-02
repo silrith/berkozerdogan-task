@@ -34,6 +34,35 @@
 			"response": []
 		},
 		{
+			"name": "CreateTransactionFull Vercel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"totalServiceFee\": 1200,\r\n    \"listingAgent\": \"Berk\",\r\n    \"sellingAgent\": \"Alice\",\r\n    \"earnest_money\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://berkozerdogan-task.vercel.app/transactions",
+					"protocol": "https",
+					"host": [
+						"berkozerdogan-task",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetAllTransactions",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -64,6 +93,38 @@
 			"response": []
 		},
 		{
+			"name": "GetAllTransactions Vercel",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://berkozerdogan-task.vercel.app/transactions",
+					"protocol": "https",
+					"host": [
+						"berkozerdogan-task",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetById",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -81,14 +142,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:2122/transactions/692f117828fde9a3b99bf481",
+					"raw": "localhost:2122/transactions/692f039b48158a06dea5f0fe",
 					"host": [
 						"localhost"
 					],
 					"port": "2122",
 					"path": [
 						"transactions",
-						"692f117828fde9a3b99bf481"
+						"692f039b48158a06dea5f0fe"
 					]
 				}
 			},
@@ -101,7 +162,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"earnest_money\": 400,\r\n    \"stage\": \"earnest_money\"\r\n}",
+					"raw": "{\r\n    \"earnest_money\": 400,\r\n    \"stage\": \"title_deed\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
